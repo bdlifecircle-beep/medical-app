@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lifecircle.bd — Admin Panel</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#f1f5f9;color:#1D2B53;padding:20px}
+    .box{max-width:960px;margin:0 auto;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:22px}
+    h1,h2,h3{margin:0 0 10px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+    input,select,textarea{width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;margin-bottom:8px}
+    button{background:#2D89C8;color:#fff;border:0;border-radius:8px;padding:9px 15px;font-size:13px;font-weight:600;cursor:pointer}
+    .btn-green{background:#2DA94F}
+    .btn-red{background:#dc2626;padding:6px 10px;font-size:12px}
+    .card{border:1px solid #e2e8f0;border-radius:10px;padding:12px;background:#f8fafc;margin-bottom:10px}
+    .err{color:#dc2626;font-size:13px;font-weight:600}
+    .ok{color:#2DA94F;font-size:13px;font-weight:600}
+    img.thumb{width:100%;height:130px;object-fit:cover;border-radius:8px;margin-bottom:8px}
+  </style>
+</head>
+<body>
+<div class="box">
+  {% if not logged_in %}
+    <h2>অ্যাডমিন লগইন (lifecircle.bd)</h2>
+    {% if error %}<p class="err">{{ error }}</p>{% endif %}
+    <form method="POST" action="/admin" style="max-width:340px">
+      <input type="hidden" name="action" value="login" />
+      <input type="password" name="password" placeholder="অ্যাডমিন পাসওয়ার্ড দিন" required />
+      <button type="submit">লগইন করুন</button>
+    </form>
+  {% else %}
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:18px;border-bottom:1px solid #e2e8f0;padding-bottom:12px">
+      <h2>lifecircle.bd — Admin Dashboard</h2>
+      <div style="display:flex;gap:8px">
+        <a href="/" style="text-decoration:none;background:#e2e8f0;color:#1D2B53;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:600">সাইট দেখুন</a>
+        <form method="POST" action="/admin" style="margin:0">
+          <input type="hidden" name="action" value="logout" />
+          <button type="submit" class="btn-red">লগআউট</button>
+        </form>
+      </div>
+    </div>
+
+    {% if msg %}<p class="ok">{{ msg }}</p>{% endif %}
+
+    <h3>১. নতুন পণ্য ও ছবি যোগ করুন (মূল্য ছাড়া)</h3>
+    <form method="POST" action="/admin/products/add" class="card" id="prod-form">
+      <div class="grid">
+        <input name="nameBn" placeholder="পণ্যের নাম *" required />
+        <select name="category">
+          <option value="bp">বিপি মেশিন</option>
+          <option value="diabetes">ডায়াবেটিস মিটার</option>
+          <option value="thermometer">থার্মোমিটার</option>
+          <option value="oxygen">অক্সিজেন কনসেন্ট্রেটর</option>
+          <option value="bipap">বাইপ্যাপ</option>
+          <option value="cpap">সি-প্যাপ</option>
+          <option value="mask">সিঙ্গেল এনপিভি মাস্ক</option>
+        </select>
+        <input name="warranty" placeholder="ওয়ারেন্টি তথ্য (যেমন: ২ বছর ওয়ারেন্টি)" />
+        <input name="imageUrl" placeholder="ছবির HTTPS লিংক (ঐচ্ছিক)" />
+      </div>
+      <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">অথবা ডিভাইস থেকে ছবি আপলোড করুন:</label>
+      <input type="file" id="img-file" accept="image/*" />
+      <input type="hidden" name="imageData" id="img-data" />
+      <textarea name="descriptionBn" rows="3" placeholder="ছবির নিচে দেখানোর জন্য পণ্যের বিবরণ লিখুন *" required></textarea>
+      <button type="submit" class="btn-green">পণ্য যুক্ত করুন</button>
+    </form>
+
+    <div class="grid">
+      {% for p in products %}
+        <div class="card">
+          {% if p.imageUrl %}<img class="thumb" src="{{ p.imageUrl }}" alt="{{ p.nameBn }}" />{% endif %}
+          <strong>{{ p.nameBn }}</strong>
+          <p style="font-size:12.5px;color:#475569;margin:6px 0">{{ p.descriptionBn }}</p>
+          <form method="POST" action="/admin/products/delete/{{ p.id }}">
+            <button type="submit" class="btn-red">মুছুন</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+
+    <h3 style="margin-top:24px">২. ব্যবহারকারীদের রেজিস্ট্রেশন ও জিজ্ঞাসা (শুধুমাত্র অ্যাডমিন দেখতে পাবেন)</h3>
+    {% if submissions %}
+      {% for s in submissions %}
+        <div class="card">
+          <strong>[{{ s.type }}] {{ s.name }}</strong> — {{ s.contact }}
+          <p style="margin:4px 0 0;font-size:12.5px">{{ s.message }} <span style="color:#64748b">({{ s.created_at }})</span></p>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p style="font-size:13px;color:#64748b">এখনো কোনো তথ্য জমা পড়েনি।</p>
+    {% endif %}
+
+    <h3 style="margin-top:24px">৩. FAQ প্রশ্নোত্তর যোগ করুন</h3>
+    <form method="POST" action="/admin/faqs/add" class="card">
+      <input name="questionBn" placeholder="নতুন প্রশ্ন লিখুন *" required />
+      <textarea name="answerBn" rows="2" placeholder="উত্তর লিখুন *" required></textarea>
+      <button type="submit">FAQ যোগ করুন</button>
+    </form>
+    {% for f in faqs %}
+      <div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+        <div><strong>{{ f.questionBn }}</strong><p style="margin:4px 0 0;font-size:12.5px">{{ f.answerBn }}</p></div>
+        <form method="POST" action="/admin/faqs/delete/{{ f.id }}"><button type="submit" class="btn-red">মুছুন</button></form>
+      </div>
+    {% endfor %}
+
+    <h3 style="margin-top:24px">৪. যোগাযোগ ও ঠিকানা পরিবর্তন</h3>
+    <form method="POST" action="/admin/settings/save" class="card">
+      <div class="grid">
+        <input name="whatsapp" value="{{ settings.whatsapp }}" placeholder="WhatsApp নম্বর" />
+        <input name="bkash" value="{{ settings.bkash }}" placeholder="bKash নম্বর" />
+        <input name="address" value="{{ settings.address }}" placeholder="আপনার ঠিকানা লিখুন" />
+        <input name="hours" value="{{ settings.hours }}" placeholder="সময়সূচি" />
+      </div>
+      <button type="submit" class="btn-green">সেটিংস সংরক্ষণ করুন</button>
+    </form>
+  {% endif %}
+</div>
+<script>
+  var fi = document.getElementById("img-file");
+  if (fi) {
+    fi.addEventListener("change", function(e) {
+      var file = e.target.files && e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function() {
+        var img = new Image();
+        img.onload = function() {
+          var c = document.createElement("canvas");
+          var maxW = 720;
+          var scale = Math.min(1, maxW / img.width);
+          c.width = Math.round(img.width * scale);
+          c.height = Math.round(img.height * scale);
+          c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+          document.getElementById("img-data").value = c.toDataURL("image/jpeg", 0.78);
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+</script>
+</body>
+</html>

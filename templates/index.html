@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1D2B53" />
+  <title>lifecircle.bd — মেডিকেল যন্ত্রপাতি ও স্লিপ টেস্ট</title>
+  <link rel="manifest" href="/static/manifest.json" />
+  <link rel="icon" type="image/png" href="/static/icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="/static/icons/icon-192.png" />
+  <style>
+    :root{--blue:#2D89C8;--green:#2DA94F;--navy:#1D2B53}
+    *{box-sizing:border-box}
+    body,.lc-wrap{margin:0;font-family:"Hind Siliguri","Plus Jakarta Sans",system-ui,-apple-system,sans-serif;background:#f8fafc;color:#1D2B53;-webkit-user-select:none;-moz-user-select:none;user-select:none}
+    .lc-wrap.lc-dark{background:#020617;color:#f1f5f9}
+    input,textarea,select{-webkit-user-select:text!important;user-select:text!important}
+    .lc-container{max-width:1180px;margin:0 auto;padding:0 16px}
+    .lc-header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);border-bottom:1px solid #e2e8f0;backdrop-filter:blur(6px)}
+    .lc-dark .lc-header{background:rgba(2,6,23,.96);border-color:#1e293b}
+    .lc-header-in{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px;flex-wrap:wrap;padding:8px 0}
+    .lc-brand{font-weight:800;font-size:21px;color:#1D2B53;cursor:pointer}
+    .lc-dark .lc-brand{color:#fff}
+    .lc-brand span{color:#2DA94F}
+    .lc-nav{display:flex;gap:14px;flex-wrap:wrap}
+    .lc-nav button{background:none;border:0;border-bottom:2px solid transparent;padding:6px 4px;font-size:14px;font-weight:600;color:#475569;cursor:pointer}
+    .lc-dark .lc-nav button{color:#cbd5e1}
+    .lc-nav button.active{color:#2D89C8;border-bottom-color:#2D89C8}
+    .lc-btn{background:#2D89C8;color:#fff;border:0;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+    .lc-btn-green{background:#2DA94F}
+    .lc-btn-outline{background:#fff;color:#1D2B53;border:1px solid #cbd5e1}
+    .lc-dark .lc-btn-outline{background:#0f172a;color:#e2e8f0;border-color:#334155}
+    .lc-bar{background:#f1f5f9;border-bottom:1px solid #e2e8f0;padding:10px 0}
+    .lc-dark .lc-bar{background:#0f172a;border-color:#1e293b}
+    .lc-search-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+    .lc-input{padding:9px 12px;border-radius:8px;border:1px solid #cbd5e1;background:#fff;color:#0f172a;font-size:13px;min-width:220px;flex:1}
+    .lc-dark .lc-input{background:#020617;color:#f8fafc;border-color:#334155}
+    .lc-hero{background:linear-gradient(125deg,#1D2B53,#2D89C8);color:#fff;border-radius:18px;padding:30px 26px;margin:22px 0}
+    .lc-hero h1{margin:0 0 10px;font-size:26px;line-height:1.3}
+    .lc-hero p{margin:0 0 16px;max-width:740px;color:#e0f2fe;font-size:14.5px;line-height:1.6}
+    .lc-sec{padding:20px 0}
+    .lc-title{font-size:21px;font-weight:800;margin:0 0 6px}
+    .lc-sub{font-size:13.5px;color:#475569;margin:0 0 16px}
+    .lc-dark .lc-sub{color:#94a3b8}
+    .lc-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+    .lc-pill{background:#fff;border:1px solid #cbd5e1;color:#334155;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer}
+    .lc-dark .lc-pill{background:#0f172a;border-color:#334155;color:#cbd5e1}
+    .lc-pill.active{background:#2D89C8;color:#fff;border-color:#2D89C8}
+    .lc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:16px}
+    .lc-card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+    .lc-dark .lc-card{background:#0f172a;border-color:#1e293b}
+    .lc-img-box{aspect-ratio:4/3;background:linear-gradient(135deg,#e0f2fe,#dcfce7);display:flex;align-items:center;justify-content:center;color:#1D2B53;font-weight:700;font-size:15px;text-align:center;padding:16px;overflow:hidden}
+    .lc-img-box img{width:100%;height:100%;object-fit:cover;display:block}
+    .lc-card-body{padding:16px;flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:10px}
+    .lc-card h3{margin:0;font-size:16px;font-weight:700}
+    .lc-card p{margin:6px 0 0;font-size:13px;color:#475569;line-height:1.55}
+    .lc-dark .lc-card p{color:#cbd5e1}
+    .lc-faq-item{background:#fff;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:10px;overflow:hidden;transition:box-shadow .2s,border-color .2s}
+    .lc-dark .lc-faq-item{background:#0f172a;border-color:#1e293b}
+    .lc-faq-item.lc-hl{border-color:#2DA94F;box-shadow:0 0 0 3px rgba(45,169,79,.28)}
+    .lc-faq-q{width:100%;text-align:left;background:none;border:0;padding:14px 18px;font-size:14px;font-weight:700;color:inherit;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+    .lc-faq-a{padding:12px 18px 16px;border-top:1px solid #f1f5f9;font-size:13.5px;color:#334155;line-height:1.65;display:none}
+    .lc-dark .lc-faq-a{border-color:#1e293b;color:#cbd5e1}
+    .lc-faq-item.open .lc-faq-a{display:block}
+    .lc-modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.65);display:none;align-items:center;justify-content:center;padding:16px;z-index:9999}
+    .lc-modal-bg.show{display:flex}
+    .lc-modal{background:#fff;color:#0f172a;border-radius:16px;max-width:430px;width:100%;padding:24px;position:relative;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+    .lc-dark .lc-modal{background:#0f172a;color:#f8fafc;border:1px solid #334155}
+    .lc-x{position:absolute;top:12px;right:12px;background:none;border:0;font-size:20px;cursor:pointer;color:#64748b;padding:4px 8px}
+    .lc-footer{background:#fff;border-top:1px solid #e2e8f0;padding:24px 0;margin-top:32px;font-size:13px;color:#475569}
+    .lc-dark .lc-footer{background:#0f172a;border-color:#1e293b;color:#94a3b8}
+  </style>
+</head>
+<body>
+<div id="lifecircle-bd-root"></div>
+<script id="lc-server-data" type="application/json">{{ site_data | tojson }}</script>
+<script>
+(function(){
+  var serverData = {};
+  try {
+    serverData = JSON.parse(document.getElementById("lc-server-data").textContent || "{}");
+  } catch (e) {}
+
+  var D = {
+    companyName: serverData.companyName || "lifecircle.bd",
+    tagline: serverData.tagline || "বিশ্বস্ত মেডিকেল যন্ত্রপাতি ও আধুনিক স্লিপ টেস্ট সেবা",
+    whatsapp: serverData.whatsapp || "01754149749",
+    bkash: serverData.bkash || "01711480987",
+    hours: serverData.hours || "শনি - বৃহস্পতি: সকাল ৯টা - রাত ৯টা | জরুরি সাপোর্ট ২৪/৭",
+    address: serverData.address || "আপনার ঠিকানা এখানে লিখুন (ঢাকা, বাংলাদেশ)",
+    sleepLabNote: serverData.sleepLabNote || "ঘুমের মধ্যে নাক ডাকা, দম বন্ধ হয়ে আসা (Sleep Apnea) কিংবা অতিরিক্ত দিনের ঘুমের সমস্যা নির্ণয়ে হোম স্লিপ অ্যাপনিয়া টেস্ট (HSAT) ও ক্লিনিক্যাল পলিসমনোগ্রাফি সুবিধা।",
+    products: (serverData.products && serverData.products.length) ? serverData.products : [],
+    diseases: [
+      {
+        id:"diabetes", nameBn:"ডায়াবেটিস মেলিটাস ও নিয়ন্ত্রণ পদ্ধতি (Diabetes)",
+        overviewBn:"ইনসুলিনের ঘাটতি বা কার্যকারিতা কমে গেলে রক্তে গ্লুকোজ বেড়ে যায়। নিয়মিত পর্যবেক্ষণ ও সঠিক জীবনযাপনে ডায়াবেটিস সম্পূর্ণ নিয়ন্ত্রণে রাখা সম্ভব।",
+        symptoms:["ঘন ঘন তৃষ্ণা পাওয়া ও গলা শুকানো","রাতের বেলা অতিরিক্ত প্রস্রাব হওয়া","হাত-পা ঝিনঝিন করা বা অবশ ভাব","ক্ষত শুকাতে দেরি হওয়া ও চোখে ঝাপসা দেখা"],
+        immediateActions:["সাদা ভাত ও চিনি কমিয়ে শাকসবজি ও লাল আটা/চাল গ্রহণ করুন","প্রতিদিন ৩০–৪৫ মিনিট দ্রুত হাঁটুন","গ্লুকোমিটারে নিয়মিত খালি পেটে ও খাওয়ার ২ ঘণ্টা পর সুগার মাপুন","সুগার ৪.০ mmol/L-এর নিচে নামলে সাথে সাথে চিনি/গ্লুকোজ পানি পান করুন"],
+        treatmentBn:"সুষম খাদ্য, নিয়মিত ব্যায়াম, চিকিৎসকের পরামর্শমতো ওষুধ/ইনসুলিন এবং প্রতি ৩ মাসে HbA1c পরীক্ষা করান।"
+      },
+      {
+        id:"hypertension", nameBn:"উচ্চ রক্তচাপ (Hypertension)",
+        overviewBn:"রক্তচাপ দীর্ঘস্থায়ীভাবে ১৪০/৯০ mmHg বা তার বেশি থাকলে তাকে উচ্চ রক্তচাপ বলে।",
+        symptoms:["সকালে মাথার পেছনে ব্যথা বা ভারী ভাব","মাথা ঘোরা ও বুক ধড়ফড় করা","সিঁড়ি ভাঙলে শ্বাসকষ্ট"],
+        immediateActions:["৫ মিনিট বিশ্রাম নিয়ে ডিজিটাল বিপি মেশিনে রক্তচাপ মাপুন","খাবারে কাঁচা লবণ পরিহার করুন","১৮০/১২০-এর বেশি হলে দ্রুত জরুরি বিভাগে যান"],
+        treatmentBn:"চিকিৎসকের পরামর্শে নিয়মিত ওষুধ সেবন, হাঁটা এবং প্রতিদিন রক্তচাপের চার্ট রাখা।"
+      },
+      {
+        id:"sleep-apnea", nameBn:"স্লিপ অ্যাপনিয়া ও নাক ডাকা (Sleep Apnea)",
+        overviewBn:"ঘুমের মধ্যে শ্বাসনালী বন্ধ হয়ে ১০ সেকেন্ড বা বেশি সময় শ্বাস আটকে যাওয়াকে স্লিপ অ্যাপনিয়া বলে।",
+        symptoms:["ঘুমের মধ্যে প্রচণ্ড নাক ডাকা ও দম বন্ধ হওয়া","সকালে ক্লান্তি ও তীব্র মাথাব্যথা","দিনের বেলা ঝিমুনি আসা"],
+        immediateActions:["পাশ ফিরে ঘুমানোর অভ্যাস করুন","হোম স্লিপ টেস্ট (HSAT) বা ক্লিনিক্যাল PSG করান"],
+        treatmentBn:"রাতে ঘুমের সময় Auto-CPAP মেশিন এবং আরামদায়ক সিঙ্গেল NPV মাস্ক ব্যবহার করা সবচেয়ে কার্যকর চিকিৎসা।"
+      },
+      {
+        id:"copd", nameBn:"সিওপিডি ও অক্সিজেন ঘাটতি (COPD & Hypoxia)",
+        overviewBn:"দীর্ঘস্থায়ী শ্বাসকষ্টে ফুসফুস পর্যাপ্ত অক্সিজেন গ্রহণ করতে না পারলে রক্তে SpO2 কমে যায়।",
+        symptoms:["অল্প পরিশ্রমে দম ফুরিয়ে যাওয়া","দীর্ঘস্থায়ী কাশি ও শ্বাসে বাঁশির শব্দ","ঠোঁট বা নখ নীলচে হওয়া"],
+        immediateActions:["সোজা হয়ে বসে সামান্য ঝুঁকে শ্বাস নিন","অক্সিজেন ৯০%-এর নিচে নামলে চিকিৎসকের নির্দেশিত ফ্লো-তে অক্সিজেন কনসেন্ট্রেটর চালু করুন"],
+        treatmentBn:"ইনহেলার, ধূমপান বর্জন, হোম অক্সিজেন কনসেন্ট্রেটর বা BiPAP থেরাপি।"
+      }
+    ],
+    dailyAdvices: [
+      { title:"সুষম খাদ্য ও পরিমিত শর্করা", summary:"প্লেটের অর্ধেক রাখুন শাকসবজি, বাকি অর্ধেক প্রোটিন ও জটিল শর্করা।", points:["চিনি, অতিরিক্ত লবণ ও ভাজাপোড়া পরিহার করুন","ঘুমানোর ২ ঘণ্টা আগে রাতের খাবার শেষ করুন"] },
+      { title:"প্রতিদিন ৩০–৪৫ মিনিট হাঁটা", summary:"নিয়মিত হাঁটা সুগার ও প্রেশার নিয়ন্ত্রণে সবচেয়ে কার্যকর।", points:["প্রতি ঘণ্টায় অন্তত ৫ মিনিট উঠে হাঁটুন","হালকা শ্বাস-প্রশ্বাসের ব্যায়াম করুন"] },
+      { title:"৭–৮ ঘণ্টা মানসম্মত ঘুম ও পানি", summary:"অপর্যাপ্ত ঘুম হৃদরোগ ও ডায়াবেটিসের ঝুঁকি বাড়ায়।", points:["ঘুমানোর আগে মোবাইল স্ক্রিন কমান","দৈনিক ২.৫–৩ লিটার বিশুদ্ধ পানি পান করুন"] },
+      { title:"নিয়মিত মনিটরিং ও ধূমপান বর্জন", summary:"রোগ জটিল হওয়ার আগেই ঘরে প্রেশার ও সুগার মাপুন।", points:["সপ্তাহে ২–৩ দিন বিপি ও সুগার নোট করুন","ধূমপান ও তামাক সম্পূর্ণ ত্যাগ করুন"] }
+    ],
+    hospitals: [
+      { nameBn:"জাতীয় জরুরি সেবা ও স্বাস্থ্য বাতায়ন", division:"সারা বাংলাদেশ", locationBn:"২৪/৭ অ্যাম্বুলেন্স ও টেলিমেডিসিন", emergencyPhone:"999 / 16263" },
+      { nameBn:"ঢাকা মেডিকেল কলেজ হাসপাতাল (DMCH)", division:"ঢাকা", locationBn:"বকশীবাজার, ঢাকা-১০০০", emergencyPhone:"+880 2-55165088" },
+      { nameBn:"বাংলাদেশ মেডিকেল বিশ্ববিদ্যালয় (BSMMU)", division:"ঢাকা", locationBn:"শাহবাগ, ঢাকা-১০০০", emergencyPhone:"+880 2-55165760" },
+      { nameBn:"জাতীয় বক্ষব্যাধি ইনস্টিটিউট (NIDCH)", division:"ঢাকা", locationBn:"মহাখালী, ঢাকা-১২১২", emergencyPhone:"+880 2-55067131" },
+      { nameBn:"জাতীয় হৃদরোগ ইনস্টিটিউট (NICVD)", division:"ঢাকা", locationBn:"শেরেবাংলা নগর, ঢাকা-১২০৭", emergencyPhone:"+880 2-58152291" },
+      { nameBn:"বারডেম জেনারেল হাসপাতাল (BIRDEM)", division:"ঢাকা", locationBn:"শাহবাগ, ঢাকা-১০০০", emergencyPhone:"+880 2-55165031" },
+      { nameBn:"চট্টগ্রাম মেডিকেল কলেজ হাসপাতাল", division:"চট্টগ্রাম", locationBn:"পাঁচলাইশ, চট্টগ্রাম", emergencyPhone:"+880 31-630335" },
+      { nameBn:"রাজশাহী মেডিকেল কলেজ হাসপাতাল", division:"রাজশাহী", locationBn:"লক্ষ্মীপুর, রাজশাহী", emergencyPhone:"+880 721-772150" },
+      { nameBn:"সিলেট এম এ জি ওসমানী মেডিকেল কলেজ", division:"সিলেট", locationBn:"কাজলশাহ, সিলেট", emergencyPhone:"+880 821-713667" },
+      { nameBn:"খুলনা মেডিকেল কলেজ হাসপাতাল", division:"খুলনা", locationBn:"বয়রা, খুলনা", emergencyPhone:"+880 41-760350" },
+      { nameBn:"শের-ই-বাংলা মেডিকেল কলেজ হাসপাতাল", division:"বরিশাল", locationBn:"বান্দ রোড, বরিশাল", emergencyPhone:"+880 431-2173547" },
+      { nameBn:"রংপুর মেডিকেল কলেজ হাসপাতাল", division:"রংপুর", locationBn:"ধাপ, রংপুর", emergencyPhone:"+880 521-63388" }
+    ],
+    faqs: (serverData.faqs && serverData.faqs.length) ? serverData.faqs : []
+  };
+
+  var root = document.getElementById("lifecircle-bd-root");
+  var state = { tab:"products", cat:"all", q:"", disId:"diabetes", dark:false, regDismissed:false, regShown:false, regMsg:"" };
+
+  function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+  function waLink(msg){ return "https://wa.me/88" + String(D.whatsapp).replace(/[^\d]/g,"").replace(/^88/,"") + (msg ? "?text=" + encodeURIComponent(msg) : ""); }
+  function isEditable(el){ if(!el) return false; var t=el.tagName; return t==="INPUT"||t==="TEXTAREA"||t==="SELECT"||el.isContentEditable; }
+
+  // User sees ONLY their own records stored locally on their phone
+  function getMyRecords(){
+    try { return JSON.parse(localStorage.getItem("lc_my_records") || "[]"); } catch(e){ return []; }
+  }
+  function saveMyRecord(rec){
+    try {
+      var list = getMyRecords();
+      list.unshift(rec);
+      localStorage.setItem("lc_my_records", JSON.stringify(list.slice(0, 20)));
+    } catch(e){}
+  }
+
+  // Copy Protection
+  document.addEventListener("contextmenu", function(e){ if(!isEditable(e.target)) e.preventDefault(); });
+  document.addEventListener("copy", function(e){ if(!isEditable(e.target)) e.preventDefault(); });
+  document.addEventListener("cut", function(e){ if(!isEditable(e.target)) e.preventDefault(); });
+  document.addEventListener("keydown", function(e){
+    var k=(e.key||"").toLowerCase();
+    if(e.key==="F12" || (e.ctrlKey&&e.shiftKey&&(k==="i"||k==="j"||k==="c")) || (e.ctrlKey&&(k==="u"||k==="s")) || ((e.ctrlKey||e.metaKey)&&k==="c"&&!isEditable(e.target))){
+      e.preventDefault();
+    }
+  });
+
+  function render(){
+    var cats=[["all","সব যন্ত্রপাতি"],["bp","বিপি মেশিন"],["diabetes","ডায়াবেটিস"],["thermometer","থার্মোমিটার"],["oxygen","অক্সিজেন"],["bipap","বাইপ্যাপ"],["cpap","সি-প্যাপ"],["mask","এনপিভি মাস্ক"]];
+    var q=state.q.trim().toLowerCase();
+    var myRecords = getMyRecords();
+    var h='<div class="lc-wrap'+(state.dark?" lc-dark":"")+'">';
+    h+='<header class="lc-header"><div class="lc-container lc-header-in">';
+    h+='<div class="lc-brand" data-nav="products">lifecircle<span>.bd</span></div>';
+    h+='<nav class="lc-nav">';
+    [["products","যন্ত্রপাতি"],["sleep","স্লিপ টেস্ট"],["diseases","রোগ ও স্বাস্থ্য"],["hospitals","হাসপাতাল"],["faq","FAQ"],["contact","যোগাযোগ"]].forEach(function(n){
+      h+='<button type="button" class="'+(state.tab===n[0]?"active":"")+'" data-nav="'+n[0]+'">'+n[1]+'</button>';
+    });
+    h+='</nav>';
+    h+='<div style="display:flex;gap:8px;align-items:center">';
+    h+='<button type="button" class="lc-btn lc-btn-outline" id="lc-theme-btn">'+(state.dark?"লাইট":"ডার্ক")+'</button>';
+    h+='<button type="button" class="lc-btn" id="lc-open-reg">রেজিস্টার</button>';
+    h+='</div></div></header>';
+
+    h+='<div class="lc-bar"><div class="lc-container lc-search-row">';
+    h+='<input class="lc-input" id="lc-search" type="search" value="'+esc(state.q)+'" placeholder="যন্ত্রপাতি, রোগের নাম বা হাসপাতাল খুঁজুন..." />';
+    h+='<a class="lc-btn lc-btn-green" target="_blank" rel="noopener noreferrer" href="'+waLink("আসসালামু আলাইকুম lifecircle.bd, আমার তথ্য জানতে চাই।")+'">WhatsApp: '+esc(D.whatsapp)+'</a>';
+    h+='</div></div>';
+
+    h+='<main class="lc-container">';
+    h+='<section class="lc-hero"><h1>'+esc(D.companyName)+' — '+esc(D.tagline)+'</h1><p>বিপি মেশিন, ডায়াবেটিস মিটার, ডিজিটাল ও অ্যানালগ থার্মোমিটার, অক্সিজেন কনসেন্ট্রেটর, বাইপ্যাপ, সি-প্যাপ, সিঙ্গেল এনপিভি মাস্ক এবং হোম স্লিপ টেস্ট সেবা।</p><div style="display:flex;gap:10px;flex-wrap:wrap"><button type="button" class="lc-btn lc-btn-green" data-nav="sleep">স্লিপ টেস্ট বুকিং</button><button type="button" class="lc-btn lc-btn-outline" data-nav="diseases">ডায়াবেটিস ও স্বাস্থ্য গাইড</button></div></section>';
+
+    if(state.tab==="products"){
+      h+='<section class="lc-sec"><h2 class="lc-title">মেডিকেল যন্ত্রপাতিসমূহ</h2><p class="lc-sub">কোনো মূল্য প্রদর্শিত হয় না; বিস্তারিত জানতে WhatsApp ('+esc(D.whatsapp)+')-এ যোগাযোগ করুন।</p>';
+      h+='<div class="lc-pills">';
+      cats.forEach(function(c){ h+='<button type="button" class="lc-pill'+(state.cat===c[0]?" active":"")+'" data-cat="'+c[0]+'">'+c[1]+'</button>'; });
+      h+='</div><div class="lc-grid">';
+      D.products.filter(function(p){
+        if(state.cat!=="all"&&p.category!==state.cat) return false;
+        if(!q) return true;
+        return (p.nameBn+" "+p.descriptionBn).toLowerCase().indexOf(q)!==-1;
+      }).forEach(function(p){
+        h+='<article class="lc-card"><div class="lc-img-box">'+(p.imageUrl?'<img src="'+esc(p.imageUrl)+'" alt="'+esc(p.nameBn)+'" />':esc(p.nameBn))+'</div>';
+        h+='<div class="lc-card-body"><div><h3>'+esc(p.nameBn)+'</h3><p>'+esc(p.descriptionBn)+'</p></div>';
+        h+='<div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid #e2e8f0"><span style="font-size:12px;font-weight:600;color:#2DA94F">'+esc(p.warranty)+'</span>';
+        h+='<a class="lc-btn" target="_blank" rel="noopener noreferrer" href="'+waLink("আমি "+p.nameBn+" সম্পর্কে জানতে চাই।")+'">জানতে চান</a></div></div></article>';
+      });
+      h+='</div></section>';
+    } else if(state.tab==="sleep"){
+      h+='<section class="lc-sec"><div class="lc-card" style="padding:24px"><h2 class="lc-title">হোম ও ক্লিনিক স্লিপ টেস্ট (Sleep Study)</h2><p class="lc-sub">'+esc(D.sleepLabNote)+'</p>';
+      h+='<div class="lc-grid"><div class="lc-card" style="padding:16px"><h3>হোম স্লিপ টেস্ট (HSAT)</h3><p>বাসায় গিয়ে টেকনিশিয়ান যন্ত্র সেট করে দেবেন। ২৪ ঘণ্টায় রিপোর্ট।</p></div>';
+      h+='<div class="lc-card" style="padding:16px"><h3>ক্লিনিক পলিসমনোগ্রাফি (PSG)</h3><p>পূর্ণাঙ্গ EEG, ECG, SpO2 এবং CPAP/BiPAP টাইট্রেশন সহ স্লিপ স্টাডি।</p></div></div>';
+      h+='<div style="margin-top:16px"><a class="lc-btn lc-btn-green" target="_blank" rel="noopener noreferrer" href="'+waLink("আমি স্লিপ টেস্ট বুকিং করতে চাই।")+'">WhatsApp-এ বুকিং করুন ('+esc(D.whatsapp)+')</a></div></div></section>';
+    } else if(state.tab==="diseases"){
+      h+='<section class="lc-sec"><h2 class="lc-title">রোগ নির্দেশিকা, ডায়াবেটিস নিয়ন্ত্রণ ও দৈনন্দিন স্বাস্থ্য পরামর্শ</h2><div class="lc-pills">';
+      D.diseases.forEach(function(d){ h+='<button type="button" class="lc-pill'+(state.disId===d.id?" active":"")+'" data-dis="'+d.id+'">'+esc(d.nameBn)+'</button>'; });
+      h+='</div>';
+      var ad=D.diseases.find(function(x){return x.id===state.disId;})||D.diseases[0];
+      if(ad){
+        h+='<div class="lc-card" style="padding:22px;margin-bottom:22px"><h3>'+esc(ad.nameBn)+'</h3><p>'+esc(ad.overviewBn)+'</p>';
+        h+='<div class="lc-grid" style="margin-top:14px"><div><strong>সাধারণ লক্ষণসমূহ:</strong><ul>'+ad.symptoms.map(function(s){return '<li>'+esc(s)+'</li>';}).join("")+'</ul></div>';
+        h+='<div><strong>নিয়ন্ত্রণ ও করণীয়:</strong><ul>'+ad.immediateActions.map(function(a){return '<li>'+esc(a)+'</li>';}).join("")+'</ul></div></div>';
+        h+='<p style="margin-top:10px"><strong>চিকিৎসা পরামর্শ:</strong> '+esc(ad.treatmentBn)+'</p></div>';
+      }
+      h+='<h3 class="lc-title" style="font-size:18px">প্রতিদিনের সুস্থতার পরামর্শ (Daily Health Advice)</h3><div class="lc-grid">';
+      D.dailyAdvices.forEach(function(adv){
+        h+='<div class="lc-card" style="padding:16px"><h3>'+esc(adv.title)+'</h3><p>'+esc(adv.summary)+'</p><ul>'+adv.points.map(function(pt){return '<li style="font-size:12.5px;margin-top:4px">'+esc(pt)+'</li>';}).join("")+'</ul></div>';
+      });
+      h+='</div></section>';
+    } else if(state.tab==="hospitals"){
+      h+='<section class="lc-sec"><h2 class="lc-title">বাংলাদেশের সরকারি ও স্বায়ত্তশাসিত হাসপাতাল তালিকা</h2><div class="lc-grid">';
+      D.hospitals.filter(function(hp){return !q||(hp.nameBn+" "+hp.division+" "+hp.locationBn).toLowerCase().indexOf(q)!==-1;}).forEach(function(hp){
+        h+='<div class="lc-card" style="padding:16px"><h3>'+esc(hp.nameBn)+'</h3><p>'+esc(hp.division)+' · '+esc(hp.locationBn)+'</p><p style="margin-top:8px;font-weight:700;color:#2D89C8">জরুরি: <a href="tel:'+esc(hp.emergencyPhone)+'">'+esc(hp.emergencyPhone)+'</a></p></div>';
+      });
+      h+='</div></section>';
+    } else if(state.tab==="faq"){
+      h+='<section class="lc-sec"><h2 class="lc-title">সাধারণ প্রশ্নোত্তর (FAQ)</h2><p class="lc-sub">প্রশ্নে ক্লিক করলে সরাসরি উত্তরে নিয়ে যাবে:</p><div class="lc-pills">';
+      D.faqs.forEach(function(f,i){ h+='<button type="button" class="lc-pill" data-jump="'+esc(f.id)+'">'+(i+1)+'. '+esc(f.questionBn)+'</button>'; });
+      h+='</div>';
+      D.faqs.forEach(function(f,i){
+        h+='<div class="lc-faq-item'+(i===0?" open":"")+'" id="lc-faq-'+esc(f.id)+'"><button type="button" class="lc-faq-q" data-toggle-faq="'+esc(f.id)+'"><span>'+(i+1)+'. '+esc(f.questionBn)+'</span><span>▾</span></button><div class="lc-faq-a">'+esc(f.answerBn)+'</div></div>';
+      });
+      h+='</section>';
+    } else if(state.tab==="contact"){
+      h+='<section class="lc-sec"><div class="lc-card" style="padding:24px"><h2 class="lc-title">যোগাযোগ ও পেমেন্ট তথ্য</h2>';
+      h+='<p><strong>WhatsApp ও হটলাইন:</strong> <a href="'+waLink()+'" target="_blank" rel="noopener noreferrer">'+esc(D.whatsapp)+'</a></p>';
+      h+='<p><strong>বিকাশ (bKash):</strong> '+esc(D.bkash)+'</p>';
+      h+='<p><strong>সময়সূচি:</strong> '+esc(D.hours)+'</p>';
+      h+='<p><strong>ঠিকানা:</strong> '+esc(D.address)+'</p>';
+      h+='<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap"><input class="lc-input" id="lc-wa-q" placeholder="আপনার প্রশ্ন লিখুন..." /><button type="button" class="lc-btn lc-btn-green" id="lc-wa-send">WhatsApp-এ পাঠান</button></div>';
+      if(myRecords.length){
+        h+='<div style="margin-top:18px;padding-top:14px;border-top:1px solid #e2e8f0"><strong style="font-size:13px">এই ফোনে সংরক্ষিত আপনার নিজের তথ্য:</strong>';
+        myRecords.forEach(function(r){ h+='<p style="font-size:12.5px;margin:4px 0">• '+esc(r.name||r.type)+' ('+esc(r.contact)+') — '+esc(r.date)+'</p>'; });
+        h+='</div>';
+      }
+      h+='</div></section>';
+    }
+
+    h+='</main>';
+    h+='<footer class="lc-footer"><div class="lc-container">© '+new Date().getFullYear()+' '+esc(D.companyName)+' · WhatsApp: '+esc(D.whatsapp)+' · bKash: '+esc(D.bkash)+'</div></footer>';
+
+    h+='<div class="lc-modal-bg" id="lc-reg-modal"><div class="lc-modal"><button type="button" class="lc-x" id="lc-reg-x" aria-label="বন্ধ করুন">×</button>';
+    h+='<h3 style="margin:0 0 8px;font-size:18px">আপনার তথ্য সংরক্ষণ করতে রেজিস্ট্রেশন করুন</h3>';
+    h+='<p style="font-size:13.5px;color:#475569;line-height:1.55;margin:0 0 16px">আপনার স্বাস্থ্য রেকর্ড, স্লিপ টেস্ট রিপোর্ট ও অর্ডার তথ্য সংরক্ষিত রাখতে অনুগ্রহ করে রেজিস্ট্রেশন করুন।</p>';
+    h+='<input class="lc-input" id="lc-reg-name" placeholder="আপনার নাম" style="width:100%;margin-bottom:8px" />';
+    h+='<input class="lc-input" id="lc-reg-phone" placeholder="মোবাইল নম্বর / ইমেইল" style="width:100%;margin-bottom:12px" />';
+    if(state.regMsg){ h+='<p style="font-size:12px;color:#2DA94F;font-weight:600;margin:0 0 8px">'+esc(state.regMsg)+'</p>'; }
+    h+='<div style="display:flex;gap:8px"><button type="button" class="lc-btn lc-btn-green" id="lc-reg-submit" style="flex:1;justify-content:center">রেজিস্টার</button><button type="button" class="lc-btn lc-btn-outline" id="lc-reg-later">Not Now</button></div></div></div>';
+    h+='</div>';
+
+    root.innerHTML = h;
+    bindEvents();
+  }
+
+  function showReg(){ if(state.regDismissed) return; var m=document.getElementById("lc-reg-modal"); if(m) m.classList.add("show"); }
+  function hideReg(){ state.regDismissed=true; var m=document.getElementById("lc-reg-modal"); if(m) m.classList.remove("show"); }
+  function openExternal(url){ var a=document.createElement("a"); a.href=url; a.target="_blank"; a.rel="noopener noreferrer"; document.body.appendChild(a); a.click(); document.body.removeChild(a); }
+
+  function bindEvents(){
+    root.querySelectorAll("[data-nav]").forEach(function(b){ b.addEventListener("click",function(){ state.tab=b.getAttribute("data-nav"); render(); window.scrollTo({top:0,behavior:"smooth"}); }); });
+    root.querySelectorAll("[data-cat]").forEach(function(b){ b.addEventListener("click",function(){ state.cat=b.getAttribute("data-cat"); render(); }); });
+    root.querySelectorAll("[data-dis]").forEach(function(b){ b.addEventListener("click",function(){ state.disId=b.getAttribute("data-dis"); render(); }); });
+    root.querySelectorAll("[data-toggle-faq]").forEach(function(b){ b.addEventListener("click",function(){ var el=document.getElementById("lc-faq-"+b.getAttribute("data-toggle-faq")); if(el) el.classList.toggle("open"); }); });
+    root.querySelectorAll("[data-jump]").forEach(function(b){ b.addEventListener("click",function(){ var el=document.getElementById("lc-faq-"+b.getAttribute("data-jump")); if(el){ el.classList.add("open"); el.classList.add("lc-hl"); el.scrollIntoView({behavior:"smooth",block:"center"}); setTimeout(function(){ el.classList.remove("lc-hl"); },2200); } }); });
+    var si=document.getElementById("lc-search"); if(si){ si.addEventListener("input",function(e){ state.q=e.target.value; render(); var ns=document.getElementById("lc-search"); if(ns){ ns.focus(); ns.setSelectionRange(ns.value.length,ns.value.length); } }); }
+    var tb=document.getElementById("lc-theme-btn"); if(tb){ tb.addEventListener("click",function(){ state.dark=!state.dark; render(); }); }
+    var ob=document.getElementById("lc-open-reg"); if(ob){ ob.addEventListener("click",function(){ state.regDismissed=false; showReg(); }); }
+    var rx=document.getElementById("lc-reg-x"); if(rx) rx.addEventListener("click",hideReg);
+    var rl=document.getElementById("lc-reg-later"); if(rl) rl.addEventListener("click",hideReg);
+
+    var rs=document.getElementById("lc-reg-submit");
+    if(rs){
+      rs.addEventListener("click",function(){
+        var nm=(document.getElementById("lc-reg-name")||{}).value||"";
+        var ph=(document.getElementById("lc-reg-phone")||{}).value||"";
+        if(!nm.trim()||!ph.trim()) return;
+        saveMyRecord({ type:"রেজিস্ট্রেশন", name:nm.trim(), contact:ph.trim(), date:new Date().toLocaleDateString("bn-BD") });
+        fetch("/api/submissions",{
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({ type:"registration", name:nm.trim(), contact:ph.trim(), message:"New user registration" })
+        }).catch(function(){});
+        openExternal(waLink("নতুন রেজিস্ট্রেশন: "+nm.trim()+" ("+ph.trim()+")"));
+        hideReg();
+      });
+    }
+
+    var ws=document.getElementById("lc-wa-send");
+    if(ws){
+      ws.addEventListener("click",function(){
+        var qv=(document.getElementById("lc-wa-q")||{}).value||"";
+        if(qv.trim()){
+          saveMyRecord({ type:"জিজ্ঞাসা", name:"আপনার প্রশ্ন", contact:qv.trim(), date:new Date().toLocaleDateString("bn-BD") });
+          fetch("/api/submissions",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({ type:"question", name:"Visitor", contact:D.whatsapp, message:qv.trim() })
+          }).catch(function(){});
+        }
+        openExternal(waLink(qv.trim()||"আসসালামু আলাইকুম lifecircle.bd"));
+      });
+    }
+  }
+
+  window.addEventListener("scroll", function(){ if(!state.regShown && !state.regDismissed && window.scrollY>260){ state.regShown=true; showReg(); } }, {passive:true});
+  render();
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function() {
+      navigator.serviceWorker.register("/service-worker.js").catch(function(){});
+    });
+  }
+})();
+</script>
+</body>
+</html>

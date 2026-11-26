@@ -1,8 +1,7 @@
 import hmac
-import json
 import os
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timezone
 from functools import wraps
 from flask import (
     Flask,
@@ -14,14 +13,30 @@ from flask import (
     session,
     url_for,
 )
+from jinja2 import FileSystemLoader
 
-app = Flask(__name__)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, "templates"),
+    static_folder=os.path.join(BASE_DIR, "static"),
+)
+app.jinja_loader = FileSystemLoader(
+    [
+        os.path.join(BASE_DIR, "templates"),
+        os.path.join(BASE_DIR, "Templates"),
+        os.path.join(BASE_DIR, "template"),
+        BASE_DIR,
+    ]
+)
+
 app.secret_key = os.environ.get("SECRET_KEY") or "lifecircle-change-this-secret-key"
-app.config["MAX_CONTENT_LENGTH"] = 6 * 1024 * 1024  # 6MB max upload
+app.config["MAX_CONTENT_LENGTH"] = 6 * 1024 * 1024
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
-DB_PATH = os.environ.get("DATABASE_PATH", os.path.join(os.path.dirname(__file__), "data.db"))
+DB_PATH = os.environ.get("DATABASE_PATH", os.path.join(BASE_DIR, "data.db"))
 
 DEFAULT_PRODUCTS = [
     {"id": "bp", "nameBn": "ডিজিটাল অটোমেটিক বিপি মেশিন (Upper Arm)", "category": "bp", "warranty": "২ বছর অফিসিয়াল ওয়ারেন্টি", "descriptionBn": "রক্তচাপ ও পালস রেট নিখুঁতভাবে পরিমাপের জন্য বড় এলসিডি স্ক্রিনযুক্ত ডিজিটাল বিপি মেশিন। অনিয়মিত হৃদস্পন্দন শনাক্তকরণ ও ৯০টি রিডিং সেভ রাখার সুবিধা।", "imageUrl": ""},
@@ -150,6 +165,15 @@ def build_site_data():
     }
 
 
+def serve_static_fallback(filename, mimetype=None):
+    for folder in ["static", "Static", ""]:
+        path = os.path.join(BASE_DIR, folder) if folder else BASE_DIR
+        full = os.path.join(path, filename)
+        if os.path.isfile(full):
+            return send_from_directory(path, filename, mimetype=mimetype)
+    return ("Not Found", 404)
+
+
 @app.route("/")
 def index():
     return render_template("index.html", site_data=build_site_data())
@@ -157,11 +181,13 @@ def index():
 
 @app.route("/service-worker.js")
 def service_worker():
-    return send_from_directory(
-        os.path.join(app.root_path, "static"),
-        "service-worker.js",
-        mimetype="application/javascript",
-    )
+    return serve_static_fallback("service-worker.js", mimetype="application/javascript")
+
+
+@app.route("/static/manifest.json")
+@app.route("/manifest.json")
+def manifest_file():
+    return serve_static_fallback("manifest.json", mimetype="application/manifest+json")
 
 
 @app.route("/api/submissions", methods=["POST"])
@@ -173,7 +199,7 @@ def create_submission():
     message = str(payload.get("message", "")).strip()[:1000]
     if not contact and not message:
         return jsonify({"error": "তথ্য দিন"}), 400
-    created_at = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+    created_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     conn = get_db()
     with conn:
         cur = conn.execute(
@@ -195,7 +221,7 @@ def admin_page():
         if action == "login":
             pw = request.form.get("password", "")
             if not expected_pw:
-                error = "সার্ভারে ADMIN_PASSWORD সেট করা হয়নি।"
+                error = "Render-এ ADMIN_PASSWORD সেট করা হয়নি।"
             elif hmac.compare_digest(pw, expected_pw):
                 session["is_admin"] = True
                 return redirect(url_for("admin_page"))
@@ -245,7 +271,7 @@ def admin_add_product():
         final_img = image_url
 
     if name and desc:
-        pid = f"prod-{int(datetime.utcnow().timestamp())}"
+        pid = f"prod-{int(datetime.now(timezone.utc).timestamp())}"
         conn = get_db()
         with conn:
             conn.execute(
@@ -272,7 +298,7 @@ def admin_add_faq():
     q = request.form.get("questionBn", "").strip()[:300]
     a = request.form.get("answerBn", "").strip()[:1500]
     if q and a:
-        fid = f"faq-{int(datetime.utcnow().timestamp())}"
+        fid = f"faq-{int(datetime.now(timezone.utc).timestamp())}"
         conn = get_db()
         with conn:
             conn.execute("INSERT INTO faqs (id, questionBn, answerBn) VALUES (?, ?, ?)", (fid, q, a))
